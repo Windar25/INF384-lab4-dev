@@ -44,54 +44,63 @@ Presupuesto: [8] min  Métrica DORA: [change failure rate]
 
 
 ## Parte 2 · Implementación
-- Link al run en verde en main: https://github.com/Windar25/INF384-lab4-dev/actions/runs/40956186279
+- Link al run en verde en main: https://github.com/Windar25/INF384-lab4-dev/actions/runs/40965328531
 - Link al pull request: https://github.com/Windar25/INF384-lab4-dev/pull/1
 - Defecto de la aplicación introducido (archivo y descripción): `src/wallet.js`. Se introdujo una excepción explícita (`throw new Error`) en la función `transferir` para simular un fallo en la lógica de negocio de las transferencias.
 - Job que debería detenerlo: `unit`
 - Link al run fallido: https://github.com/Windar25/INF384-lab4-dev/actions/runs/40963429359/job/123761756367?pr=1
 
-
 ## Parte 3 · Decisión bajo restricción
-Link al run medido:
+Link al run medido: https://github.com/Windar25/INF384-lab4-dev/actions/runs/40965328531
 
 | Job | Duración (min:seg) |
 |---|---|
-| unit | |
-| integration | |
-| sast | |
-| sca | |
-| build-push | |
-| deploy | |
-| smoke | |
-| e2e | |
-| load | |
-| **Total** | |
+| unit | 00:12 |
+| integration | 00:12 |
+| sast | 00:17 |
+| sca | 00:22 |
+| build-push | 01:55 |
+| deploy | 00:21 |
+| smoke | 00:12 |
+| e2e | 00:32 |
+| load | 12:13 |
+| **Total** | **16:16** |
 
 Resultado de load en ese run:
 | Métrica | Valor |
 |---|---|
-| p90 | |
-| p95 | |
-| Máximo | |
-| Tasa de error | |
-| Requests por segundo | |
+| p90 | 67.66 ms |
+| p95 | 69.54 ms |
+| Máximo | 329.73 ms |
+| Tasa de error | 0.00% |
+| Requests por segundo | 48.80 req/s |
 
 Conclusión sobre el comportamiento bajo carga:
+La aplicación Monedero Andino responde con alta estabilidad bajo la carga evaluada por k6, manteniendo disponibilidad continua y una tasa de error de 0.00% sin caídas de peticiones HTTP, con una latencia p95 de 69.54 ms.
 
 SLO propuesto (percentil, valor, ventana) y justificación:
+Percentil 95 (p95) < 300 ms evaluado en una ventana de 30 días. Se configuró `SLO_P95: 300` en `ci.yml`. Se establece este valor holgado por encima de los 69.54 ms medidos para absorber variaciones normales de red y rendimiento en los runners de GitHub Actions sin hacer fallar el job `load` por falsos positivos.
 
 SLA propuesto y diferencia con el SLO:
+Percentil 95 (p95) < 500 ms con 99.5% de disponibilidad mensual. El SLO es un objetivo de ingeniería interno para detectar degradaciones técnicas de forma temprana; el SLA es el acuerdo contractual con clientes externos que incluye penalizaciones económicas, por lo que posee un margen de tolerancia superior para proteger a la organización.
 
 Cambios para cumplir el presupuesto:
 | Cambio | Job | Minutos recuperados |
 |---|---|---|
+| Ajustar el stage de carga constante en test/load/transferir.js a 4 minutos | load | 8 min |
+| Configurar escaneo de imágenes de Trivy como informativo (`continue-on-error: true`) | build-push | 0.5 min |
 
-Total resultante: [ ] min
-Link al run en main con los cambios:
+Duración total resultante: 8 min 16 s
+Link al run en main con los cambios: https://github.com/Windar25/INF384-lab4-dev/actions/runs/40968175684
 
 Riesgo aceptado (defecto de la aplicación concreto y efecto en la métrica DORA asignada):
+Al acortar la duración de las pruebas de carga o paralelizar análisis de seguridad, degradaciones puntuales bajo tráfico sostenido o casos de borde podrían no ser detectadas antes del despliegue.
+**Efecto en Change Failure Rate (CFR):** Sube. Si un defecto no detectado en CI llega a producción y falla en ejecución, incrementará la tasa de cambios que generan fallos.
 
 Decisión sobre sast (se queda / se mueve a otra etapa o evento / informativo) y razón:
+Se mueve a informativo (`continue-on-error: true`) o a un evento asíncrono. Los análisis estáticos consumen tiempo de ejecución en el pipeline sin validar funcionalidad en tiempo de ejecución; no deben bloquear entregas críticas de valor.
+**Efecto en Change Failure Rate (CFR):** Sube. Al no ser bloqueante ante hallazgos estáticos, existe el riesgo de desplegar vulnerabilidades no corregidas a producción.
 
 ## Declaración de uso de IA
 Herramientas usadas y para qué:
+- **Gemini:** Se utilizó como herramienta de asistencia y consulta técnica para diagnosticar los errores presentados en el pipeline `ci.yml`, apoyar en la interpretación de los resultados de las pruebas de carga con k6 y orientar la estructuración de las respuestas teóricas del informe en `RESPUESTAS.md` según los requerimientos del PDF.
