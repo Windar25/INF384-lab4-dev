@@ -1,5 +1,9 @@
 name: ci
 
+concurrency:
+  group: lambda-deploy-${{ github.ref }}
+  cancel-in-progress: false
+  
 on:
   pull_request:
     paths-ignore: ['**.md']
