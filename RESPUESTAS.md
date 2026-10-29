@@ -90,7 +90,7 @@ Cambios para cumplir el presupuesto:
 | Ajustar el stage de carga constante en test/load/transferir.js a 4 minutos | load | 8 min |
 | Configurar escaneo de imágenes de Trivy como informativo (`continue-on-error: true`) | build-push | 0.5 min |
 
-Duración total resultante: 8 min 16 s
+Duración total resultante: 9 min 01 s
 Link al run en main con los cambios: https://github.com/Windar25/INF384-lab4-dev/actions/runs/40968175684
 
 Riesgo aceptado (defecto de la aplicación concreto y efecto en la métrica DORA asignada):
