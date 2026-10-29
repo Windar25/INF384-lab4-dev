@@ -35,6 +35,7 @@ function historial(store, usuario) {
 }
 
 function transferir(store, { origen, destino, monto } = {}) {
+  throw new Error("Fallo intencional de transferencia");
   const errorMonto = validarMonto(monto);
   if (errorMonto) {
     throw new ErrorNegocio(400, errorMonto);
