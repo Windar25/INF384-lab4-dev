@@ -103,4 +103,4 @@ Se mueve a informativo (`continue-on-error: true`) o a un evento asíncrono. Los
 
 ## Declaración de uso de IA
 Herramientas usadas y para qué:
-- **Gemini:** Se utilizó como herramienta de asistencia y consulta técnica para diagnosticar los errores presentados en el pipeline `ci.yml`, apoyar en la interpretación de los resultados de las pruebas de carga con k6 y orientar la estructuración de las respuestas teóricas del informe en `RESPUESTAS.md` según los requerimientos del PDF.
+- **Gemini:** Se utilizó como herramienta de apoyo y guía técnica para comprender los requerimientos del laboratorio. Ayudó a interpretar los fallos y la lógica de configuración en `ci.yml`, analizar los resultados de las pruebas de carga con k6 y orientar la estructuración de las respuestas teóricas y justificaciones en `RESPUESTAS.md`
