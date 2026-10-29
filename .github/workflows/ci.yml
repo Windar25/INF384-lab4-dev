@@ -292,7 +292,7 @@ jobs:
         run: npm run test:e2e
 
   load:
-    needs: smoke
+    needs: [smoke, e2e]
     runs-on: ubuntu-24.04
     steps:
       - uses: actions/checkout@v7
