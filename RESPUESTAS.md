@@ -44,11 +44,12 @@ Presupuesto: [8] min  Métrica DORA: [change failure rate]
 
 
 ## Parte 2 · Implementación
-- Link al run en verde en main:
-- Link al pull request:
-- Defecto de la aplicación introducido (archivo y descripción):
-- Job que debería detenerlo:
-- Link al run fallido:
+- Link al run en verde en main: https://github.com/Windar25/INF384-lab4-dev/actions/runs/40956186279
+- Link al pull request: https://github.com/Windar25/INF384-lab4-dev/pull/1
+- Defecto de la aplicación introducido (archivo y descripción): `src/wallet.js`. Se introdujo una excepción explícita (`throw new Error`) en la función `transferir` para simular un fallo en la lógica de negocio de las transferencias.
+- Job que debería detenerlo: `unit`
+- Link al run fallido: https://github.com/Windar25/INF384-lab4-dev/actions/runs/40963429359/job/123761756367?pr=1
+
 
 ## Parte 3 · Decisión bajo restricción
 Link al run medido:
