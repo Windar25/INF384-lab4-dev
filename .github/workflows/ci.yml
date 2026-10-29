@@ -127,7 +127,7 @@ jobs:
             --tag "$REGISTRY/$APP:$GITHUB_SHA" \
             .
 
-      - name: Escaneo de la imagen (informativo)
+      - name: Escaneo de la imagen
         env:
           REGISTRY: ${{ steps.ecr.outputs.registry }}
         run: |
@@ -135,21 +135,9 @@ jobs:
             --volume /var/run/docker.sock:/var/run/docker.sock \
             ghcr.io/aquasecurity/trivy:0.76.1 image \
               --scanners vuln \
-              --format json \
-              --quiet \
-              "$REGISTRY/$APP:$GITHUB_SHA" > trivy-imagen.json
-          {
-            echo "### Escaneo de la imagen"
-            echo
-            jq -r '
-              def n(s): [.Vulnerabilities[]? | select(.Severity == s)] | length;
-              "| Objetivo | CRITICAL | HIGH | MEDIUM | LOW |",
-              "|---|---:|---:|---:|---:|",
-              (.Results[] | "| \(.Target) | \(n("CRITICAL")) | \(n("HIGH")) | \(n("MEDIUM")) | \(n("LOW")) |")
-            ' trivy-imagen.json
-          } >> "$GITHUB_STEP_SUMMARY"
-          altos="$(jq '[.Results[].Vulnerabilities[]? | select(.Severity == "HIGH" or .Severity == "CRITICAL")] | length' trivy-imagen.json)"
-          echo "::warning title=Escaneo de la imagen::${altos} hallazgos HIGH o CRITICAL. Informativo, no detiene."
+              --severity HIGH,CRITICAL \
+              --exit-code 1 \
+              "$REGISTRY/$APP:$GITHUB_SHA"
 
       - name: Push
         env:
